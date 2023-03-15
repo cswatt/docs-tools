@@ -1,7 +1,8 @@
 import React, {useState} from "react";
 import './App.css';
-import { parseInput, parseOutput, DEFAULT, parseOptions } from "./helpers";
-import { TextField, Button, Box, Modal, Drawer, Icon, Select, MenuItem, Chip, Fab } from '@mui/material';
+import {AddAction} from './AddAction'
+import { parseInput, parseOutput, parseOptions } from "./helpers";
+import { TextField, Button, Box, Modal, Drawer, Icon, Select, MenuItem, Chip, Fab, Tooltip } from '@mui/material';
 
 
 class Action extends React.Component{
@@ -113,7 +114,7 @@ class Action extends React.Component{
                   {action}
                 </Box>
                 <Box className="grid-button">
-                  {isHovering && <Icon size="small">edit</Icon>}
+                  {isHovering && <Icon className="grid-button" size="small">edit</Icon>}
                 </Box>
                 
                 <Box className="specific-content">
@@ -253,6 +254,7 @@ class App extends React.Component {
     this.state = {
       values: [],
       open: false,
+      addOpen: false,
       output: []
     };
     this.handleTextChange = this.handleTextChange.bind(this);
@@ -260,17 +262,19 @@ class App extends React.Component {
     this.handleActionChange = this.handleActionChange.bind(this);
     this.handleOpen = this.handleOpen.bind(this);
     this.handleClose = this.handleClose.bind(this);
+    this.handleAddOpen = this.handleAddOpen.bind(this);
+    this.handleAddClose = this.handleAddClose.bind(this);
   }
 
-  componentDidMount(){
-    this.setState({
-      input: DEFAULT
-    })
-    const input = parseInput(DEFAULT)
-    this.setState({
-      values: input
-    });
-  }
+  // componentDidMount(){
+  //   this.setState({
+  //     input: DEFAULT
+  //   })
+  //   const input = parseInput(DEFAULT)
+  //   this.setState({
+  //     values: input
+  //   });
+  // }
 
   handleOpen() {
     const output = parseOutput(this.state.values)
@@ -280,6 +284,9 @@ class App extends React.Component {
     })
   }
   handleClose() {this.setState({open: false})}
+
+  handleAddOpen() {this.setState({addOpen: true})}
+  handleAddClose() {this.setState({addOpen: false})}
 
   handleButton() {
     const input = parseInput(this.state.input)
@@ -292,6 +299,11 @@ class App extends React.Component {
     this.setState({
       input: e.target.value
     });
+
+    const input = parseInput(e.target.value)
+    this.setState({
+      values: input
+    });
   }
 
   handleActionChange(index, input) {
@@ -302,15 +314,18 @@ class App extends React.Component {
     });
   }
   render() {
-    const { values, open, output } = this.state;
+    const { values, addOpen, open, output } = this.state;
+
+
   return (
     <div className="App">
-      <Fab sx={{position: 'fixed', bottom: 16, right: 100}}>
-        <Icon>add</Icon>
-      </Fab>
+      <AddAction/>
+      
+      <Tooltip title="Export">
       <Fab sx={{position: 'fixed', bottom: 16, right: 16}} onClick={this.handleOpen}>
         <Icon>ios_share</Icon>
       </Fab>
+      </Tooltip>
       <Modal
         className="Modal"
         open={open}
@@ -331,15 +346,15 @@ class App extends React.Component {
       </Modal>
       <TextField
           id="filled-multiline-static"
-          label="yaml"
+          label="local/bin/py/build/configurations/pull_config_preview.yaml"
           multiline
           fullWidth
-          rows={10}
+          rows={5}
           defaultValue=""
           variant="filled"
           onChange={this.handleTextChange}
         />
-      <Button onClick={this.handleButton}variant="contained">load</Button>
+    
       
       {values.map((item, i) => {
       return (

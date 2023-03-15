@@ -34,6 +34,7 @@
 
 .editbutton{
   height: 5px;
+  color: rgba(230, 230, 230, 0.5)
 }
 .gridrow {
   width: 100%;
@@ -64,6 +65,7 @@
 .grid-action{
   display: inline-block;
   text-transform: uppercase;
+  font-size: 0.8em;
 }
 
 .grid-button{
